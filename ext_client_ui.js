@@ -23,7 +23,15 @@ define([
      */
     var update_ui = function(evt, msg) {
         if (msg.msg_type == 'execute_input') {
-            var cell = IPython.notebook.insert_cell_at_bottom('code');
+            if (msg.content.code.startsWith('## cell'))
+            {
+               var cell = IPython.notebook.insert_cell_at_bottom('code');
+            }
+            else {
+               // should add a way to replace cells other than the bottom one
+	       var cell = IPython.notebook.get_cell(IPython.notebook.ncells() - 1);
+               cell.clear_output()
+            }
             if (cell) {
                 var cell_index = IPython.notebook.ncells() - 1;
                 cell.last_msg_id = msg.parent_header.msg_id;
